@@ -1081,6 +1081,10 @@ class _YahooFinance(object):
         params = self._construct_params(config, params)
         urls = self._construct_urls(config, params, **kwargs)
         response_field = config["response_field"]
+        print("config: ", config)
+        print("params: ", params)
+        print("urls: ", urls)
+        print("resp field: ", response_field)
         try:
             if isinstance(self.session, FuturesSession):
                 data = self._async_requests(response_field, urls, params, **kwargs)
