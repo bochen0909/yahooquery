@@ -17,14 +17,14 @@ class YahooSelenium(object):
 
     LOGIN_URL = "https://login.yahoo.com"
 
-    def __init__(self, **kwargs):
+    def __init__(self, headless=False, **kwargs):
         self.username = kwargs.get("username")
         self.password = kwargs.get("password")
         self.chrome_options = webdriver.ChromeOptions()
         self.chrome_options.add_argument(
             "--user-agent=" + kwargs.get("user_agent", random.choice(USER_AGENT_LIST))
         )
-        self.chrome_options.add_argument("--headless")
+        if headless: self.chrome_options.add_argument("--headless")
         self.chrome_options.add_argument("--no-sandbox")
         self.chrome_options.add_argument("--log-level=3")
         self.chrome_options.add_argument("--ignore-certificate-errors")
@@ -46,7 +46,7 @@ class YahooSelenium(object):
     def yahoo_data(self):
         self.driver.get("https://finance.yahoo.com/trending-tickers")
         d = self._get_user_data()
-        self.driver.quit()
+        #self.driver.quit()
         return d
 
     def yahoo_login(self):
@@ -61,7 +61,7 @@ class YahooSelenium(object):
             password_element.send_keys(self.password)
             self.driver.find_element(By.XPATH, "//button[@id='login-signin']").click()
             d = self._get_user_data()
-            self.driver.quit()
+            #self.driver.quit()
             return d
         except TimeoutException:
             return (
