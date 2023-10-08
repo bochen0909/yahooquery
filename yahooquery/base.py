@@ -926,7 +926,7 @@ class _YahooFinance(object):
     def __init__(self, **kwargs):
         self.country = kwargs.get("country", "united states").lower()
         self.formatted = kwargs.pop("formatted", False)
-        self.session = _init_session(kwargs.pop("session", None), **kwargs)
+        self.session = kwargs.get("session")
         self.crumb = kwargs.pop("crumb", None)
         self.progress = kwargs.pop("progress", False)
         username = os.getenv("YF_USERNAME") or kwargs.get("username")
@@ -1079,10 +1079,10 @@ class _YahooFinance(object):
     def _get_data(self, key, params={}, **kwargs):
         config = self._CONFIG[key]
         params = self._construct_params(config, params)
-        urls = self._construct_urls(config, params, **kwargs)
-        response_field = config["response_field"]
         print("config: ", config)
         print("params: ", params)
+        urls = self._construct_urls(config, params, **kwargs)
+        response_field = config["response_field"]
         print("urls: ", urls)
         print("resp field: ", response_field)
         try:
@@ -1134,12 +1134,9 @@ class _YahooFinance(object):
 
     def _construct_urls(self, config, params, **kwargs):
         """Construct URL requests"""
+        assert not isinstance(self.session, FuturesSession)
         if kwargs.get("method") == "post":
-            urls = [
-                self.session.post(
-                    url=config["path"], params=params, json=kwargs.get("payload")
-                )
-            ]
+            raise NotImplementedError("POST requests not yet supported")
         elif "symbol" in config["query"]:
             ls = (
                 params
